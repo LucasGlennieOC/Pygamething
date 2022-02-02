@@ -6,105 +6,137 @@ import time
 import math
 import random
 import sys
+import threading
 from pygame.locals import *
-
 
 pygame.init()
 
-
-
-
-
-
-screen = pygame.display.set_mode((600,400))
-pygame.display.set_caption("Pow")
+screen = pygame.display.set_mode((1000,600))
+pygame.display.set_caption("Draw")
+IMAGE_SIZE = (200,200)
+playerImg = pygame.image.load('img/guy1.png')
+spriteImg = pygame.image.load('img/rundude0000.png')
+spriteImg = pygame.transform.scale(spriteImg, IMAGE_SIZE)
+##                    pygame.image.load('img/rundude0001.png'),
+##                    pygame.image.load('img/rundude0002.png'),
+##                    pygame.image.load('img/rundude0003.png'),
+##                    pygame.image.load('img/rundude0004.png'),
+##                    pygame.image.load('img/rundude0005.png'),
+##                    pygame.image.load('img/rundude0006.png'),
+##                    pygame.image.load('img/rundude0007.png'),
+##                    pygame.image.load('img/rundude0008.png')]
 clock = pygame.time.Clock()
-manImg = pygame.image.load('img/rundude0000.png')
 
 
 
-def drawing():
+
+def player (x, y): 
+    screen.blit(spriteImg, (x, y) ) 
+
+
+
+[os.remove(png) for png in glob.glob("*png")]
+def draw():
     loop = True
-    press = False
-    color = "white"
-    cnt = 0
-    ink = 0 
-    global screen
-    global barImg
-    [os.remove(png) for png in glob.glob("*png")]
     while loop:
         
-        try:
-            #pygame.mouse.set_visible(False)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    loop = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_c:
-                        screen.fill(pygame.Color(0, 0, 0))
-                    if event.key == pygame.K_s:
-                        if cnt < 10:
-                            pygame.image.save(screen, f"screenshot0{cnt}.png")
-                        else:
-                            pygame.image.save(screen, f"screenshot{cnt}.png")
-                        cnt += 1
-                    if event.key == pygame.K_g:
-                            frames = []
-                            imgs = glob.glob("*.png")
-                            for i in imgs:
-                                new_frame = Image.open(i)
-                                frames.append(new_frame)
+        press = False
+        color = "white"
+        cnt = 0
+        ink = 0
+        frame_index = 0
+        animation_speed = 0.4
 
-                            # Save into a GIF file that loops forever
-                            frames[0].save('animated.gif', format='GIF',
-                                           append_images=frames[1:],
-                                           save_all=True,
-                                           duration=300, loop=0)
-                            os.startfile("animated.gif")
+        #pygame.mouse.set_visible(False)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                loop = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    screen.fill(pygame.Color(0, 0, 0))
+                    frame_index = 0
+                if event.key == pygame.K_s:
+                    if cnt < 10:
+                        pygame.image.save(screen, f"Screenshots\screenshot " + time.strftime("%Y-%m-%d_%H%M%S") + ".png")
+                        print('Captured screenshot')
+                    else:
+                        pygame.image.save(screen, f"Screenshots\screenshot " + time.strftime("%Y-%m-%d_%H%M%S") + ".png")
+                        print('Captured screenshot')
+                    cnt += 1
+                if event.key == pygame.K_g:
+                        frames = []
+                        imgs = glob.glob("*.png")
+                        for i in imgs:
+                            new_frame = Image.open(i)
+                            frames.append(new_frame)
+     
+                        # Save into a GIF file that loops forever
+                        frames[0].save('animated.gif', format='GIF',
+                                        append_images=frames[1:],
+                                        save_all=True,
+                                        duration=300, loop=0)
+                        os.startfile("animated.gif")
 
-        
-            px, py = pygame.mouse.get_pos()
-            if pygame.mouse.get_pressed() == (1,0,0):
-                pygame.draw.rect(screen, (255,255,255), (px,py,10,10))
-                
-                ink+=1
-                #math.ceil(ink)
-                print(ink)
-                for ink in range(0,100):
-                    barImg = pygame.image.load(f'inkbar\load{ink}.png')
-                    screen.blit(barImg,(100,100))
-                    pygame.display.update()
 
-                
-                
-
-            if pygame.mouse.get_pressed() == (0,0,1):
-                pygame.draw.rect(screen, (0,0,0), (px,py,10,10))
-
-            if event.type == pygame.MOUSEBUTTONUP:
-                press == False
+        px, py = pygame.mouse.get_pos()
+        if pygame.mouse.get_pressed() == (1,0,0):
+            pygame.draw.rect(screen, (255,255,255), (px,py,10,10))
+            frame_index += animation_speed
             pygame.display.update()
-            clock.tick(1000)
-        except Exception as e:
-            print(e)
-            pygame.quit()
-       
 
+            #math.ceil(ink)
 
-
-#def bar():
-    #global ink
-    #global screen
-    #global barImg
-    #ink = 0
-    #print(list(range(100,0)))
-    #barImg = pygame.image.load(f'inkbar\load{ink}.png')
-    #screen.blit(barImg,(100,100))
-    #pygame.display.update()
+        #print(frame_index)
+        if frame_index >= 100:
+            frame_index = 0
+        pygame.draw.rect(screen, (0,0,0), (20,1,100,102))
+        barImg = pygame.image.load(f'inkbar/load{int(frame_index)}.png')
         
+        screen.blit(barImg,(20,1))
+        pygame.display.update()
 
-drawing()
-#bar()
+        if pygame.mouse.get_pressed() == (0,0,1):
+            pygame.draw.rect(screen, (0,0,0), (px,py,10,10))
 
-pygame.quit()
-quit()
+        if event.type == pygame.MOUSEBUTTONUP:
+            press == False
+        pygame.display.update()
+        #clock.tick(1000)
+
+def play():
+    running = True
+    playerX = 500  
+    playerY = 300
+    #clear = (0, 0, 0, 0)
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:   #if we click the X the program ends
+                running = False
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RIGHT]:
+            pygame.draw.rect(screen, (0,0,0), (playerX - 10,playerY,200,200))   
+            pygame.display.update()
+            playerX += 0.3
+            player(playerX, playerY)
+            pygame.display.update()
+        if keys[pygame.K_LEFT]:
+            pygame.draw.rect(screen, (0,0,0), (playerX + 90,playerY,200,200))
+            pygame.display.update()
+            
+            playerX -= 0.3
+            player(playerX, playerY)
+            
+            pygame.display.update()
+
+
+        
+          
+         
+
+
+thread1 = threading.Thread(target=draw)
+thread1.start()
+
+thread2 = threading.Thread(target=play)
+thread2.start()
