@@ -10,13 +10,14 @@ import threading
 from pygame.locals import *
 
 pygame.init()
+pygame.mouse.set_system_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR)
 
 screen = pygame.display.set_mode((1000,600))
 pygame.display.set_caption("Draw")
 IMAGE_SIZE = (150,150)
 playerImg = pygame.image.load('img/guy1.png')
 #spriteImg = pygame.image.load('img/rundude0.png')
-#spriteImg = pygame.transform.scale(spriteImg, IMAGE_SIZE)
+
 ##                    pygame.image.load('img/rundude1.png'),
 ##                    pygame.image.load('img/rundude2.png'),
 ##                    pygame.image.load('img/rundude3.png'),
@@ -26,13 +27,21 @@ playerImg = pygame.image.load('img/guy1.png')
 ##                    pygame.image.load('img/rundude7.png'),
 ##                    pygame.image.load('img/rundude8.png')]
 clock = pygame.time.Clock()
+frame_index = 0
 
 
 
-
-def player (x, y):
+def rightplayer (x, y):
     global spriteImg
     spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
+    spriteImg = pygame.transform.scale(spriteImg, IMAGE_SIZE)
+    screen.blit(spriteImg, (x, y) )
+    
+def leftplayer (x, y):
+    global spriteImg
+    spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
+    spriteImg = pygame.transform.scale(spriteImg, IMAGE_SIZE)
+    spriteImg = pygame.transform.flip(spriteImg, True, False)
     screen.blit(spriteImg, (x, y) )
     
 
@@ -40,6 +49,7 @@ def player (x, y):
 
 [os.remove(png) for png in glob.glob("*png")]
 def draw():
+    global frame_index
     loop = True
     while loop:
         
@@ -47,8 +57,8 @@ def draw():
         color = "white"
         cnt = 0
         ink = 0
-        frame_index = 0
-        animation_speed = 0.4
+        
+        animation_speed = 0.3
 
         #pygame.mouse.set_visible(False)
         for event in pygame.event.get():
@@ -83,13 +93,13 @@ def draw():
 
         px, py = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed() == (1,0,0):
-            pygame.draw.rect(screen, (255,255,255), (px,py,10,10))
+            pygame.draw.rect(screen, (255,255,255), (px,py,15,15))
             frame_index += animation_speed
-            #pygame.display.update()
+            pygame.display.update()
 
             #math.ceil(ink)
 
-        #print(frame_index)
+        print(frame_index)
         if frame_index >= 100:
             frame_index = 0
         
@@ -114,7 +124,7 @@ def play():
     playerX = 500  
     playerY = 300
     run_index = 0
-    run_speed = 0.4
+    run_speed = 0.2
     #clear = (0, 0, 0, 0)
     while running:
         for event in pygame.event.get():
@@ -123,26 +133,26 @@ def play():
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,150))
+            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,110))
             run_index += run_speed
-            time.sleep(0.3)
+            #time.sleep(0.3)
             if run_index >= 8:
                 run_index = 0
             spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
             #pygame.display.update()
-            playerX += 1
-            player(playerX, playerY)
+            playerX += 1.5
+            rightplayer(playerX, playerY)
             #pygame.display.update()
         if keys[pygame.K_LEFT]:
-            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,150))
+            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,110))
             #pygame.display.update()
             run_index += run_speed
-            time.sleep(0.3)
+            #time.sleep(0.3)
             if run_index >= 8:
                 run_index = 0
             spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
-            playerX -= 1
-            player(playerX, playerY)
+            playerX -= 1.5
+            leftplayer(playerX, playerY)
             
         pygame.display.update()
 
