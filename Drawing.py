@@ -13,25 +13,27 @@ pygame.init()
 
 screen = pygame.display.set_mode((1000,600))
 pygame.display.set_caption("Draw")
-IMAGE_SIZE = (200,200)
+IMAGE_SIZE = (150,150)
 playerImg = pygame.image.load('img/guy1.png')
-spriteImg = pygame.image.load('img/rundude0000.png')
-spriteImg = pygame.transform.scale(spriteImg, IMAGE_SIZE)
-##                    pygame.image.load('img/rundude0001.png'),
-##                    pygame.image.load('img/rundude0002.png'),
-##                    pygame.image.load('img/rundude0003.png'),
-##                    pygame.image.load('img/rundude0004.png'),
-##                    pygame.image.load('img/rundude0005.png'),
-##                    pygame.image.load('img/rundude0006.png'),
-##                    pygame.image.load('img/rundude0007.png'),
-##                    pygame.image.load('img/rundude0008.png')]
+#spriteImg = pygame.image.load('img/rundude0.png')
+#spriteImg = pygame.transform.scale(spriteImg, IMAGE_SIZE)
+##                    pygame.image.load('img/rundude1.png'),
+##                    pygame.image.load('img/rundude2.png'),
+##                    pygame.image.load('img/rundude3.png'),
+##                    pygame.image.load('img/rundude4.png'),
+##                    pygame.image.load('img/rundude5.png'),
+##                    pygame.image.load('img/rundude6.png'),
+##                    pygame.image.load('img/rundude7.png'),
+##                    pygame.image.load('img/rundude8.png')]
 clock = pygame.time.Clock()
 
 
 
 
-def player (x, y): 
-    screen.blit(spriteImg, (x, y) ) 
+def player (x, y):
+    spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
+    screen.blit(spriteImg, (x, y) )
+    
 
 
 
@@ -82,31 +84,36 @@ def draw():
         if pygame.mouse.get_pressed() == (1,0,0):
             pygame.draw.rect(screen, (255,255,255), (px,py,10,10))
             frame_index += animation_speed
-            pygame.display.update()
+            #pygame.display.update()
 
             #math.ceil(ink)
 
         #print(frame_index)
         if frame_index >= 100:
             frame_index = 0
-        pygame.draw.rect(screen, (0,0,0), (20,1,100,102))
-        barImg = pygame.image.load(f'inkbar/load{int(frame_index)}.png')
         
+        barImg = pygame.image.load(f'inkbar/load{int(frame_index)}.png')
+        pygame.draw.rect(screen, (0,0,0), (20,1,100,102))
         screen.blit(barImg,(20,1))
-        pygame.display.update()
+        
 
         if pygame.mouse.get_pressed() == (0,0,1):
             pygame.draw.rect(screen, (0,0,0), (px,py,10,10))
 
         if event.type == pygame.MOUSEBUTTONUP:
             press == False
-        pygame.display.update()
-        #clock.tick(1000)
+        #pygame.display.update()
+        clock.tick(1000)
 
 def play():
     running = True
+    global spriteImg
+    global run_index
+    global run_speed
     playerX = 500  
     playerY = 300
+    run_index = 0
+    run_speed = 0.4
     #clear = (0, 0, 0, 0)
     while running:
         for event in pygame.event.get():
@@ -115,19 +122,23 @@ def play():
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            pygame.draw.rect(screen, (0,0,0), (playerX - 10,playerY,200,200))   
-            pygame.display.update()
+            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,150))
+            run_index += run_speed
+            if run_index >= 8:
+                run_index = 0
+            spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
+            #pygame.display.update()
             playerX += 0.3
             player(playerX, playerY)
-            pygame.display.update()
+            #pygame.display.update()
         if keys[pygame.K_LEFT]:
-            pygame.draw.rect(screen, (0,0,0), (playerX + 90,playerY,200,200))
-            pygame.display.update()
+            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,150))
+            #pygame.display.update()
             
             playerX -= 0.3
             player(playerX, playerY)
             
-            pygame.display.update()
+        pygame.display.update()
 
 
         
