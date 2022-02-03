@@ -31,6 +31,7 @@ clock = pygame.time.Clock()
 
 
 def player (x, y):
+    global spriteImg
     spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
     screen.blit(spriteImg, (x, y) )
     
@@ -124,18 +125,23 @@ def play():
         if keys[pygame.K_RIGHT]:
             pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,150))
             run_index += run_speed
+            time.sleep(0.3)
             if run_index >= 8:
                 run_index = 0
             spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
             #pygame.display.update()
-            playerX += 0.3
+            playerX += 1
             player(playerX, playerY)
             #pygame.display.update()
         if keys[pygame.K_LEFT]:
             pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,150))
             #pygame.display.update()
-            
-            playerX -= 0.3
+            run_index += run_speed
+            time.sleep(0.3)
+            if run_index >= 8:
+                run_index = 0
+            spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
+            playerX -= 1
             player(playerX, playerY)
             
         pygame.display.update()
