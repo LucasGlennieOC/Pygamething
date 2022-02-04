@@ -122,9 +122,15 @@ def play():
     global run_index
     global run_speed
     playerX = 500  
-    playerY = 300
+    playerY = 500
     run_index = 0
     run_speed = 0.2
+    vel = 2
+    width = 1000
+    height = 600
+
+    isJump = False
+    jumpCount = 10
     #clear = (0, 0, 0, 0)
     while running:
         for event in pygame.event.get():
@@ -140,9 +146,10 @@ def play():
                 run_index = 0
             spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
             #pygame.display.update()
-            playerX += 1.5
+            playerX += vel
             rightplayer(playerX, playerY)
             #pygame.display.update()
+            
         if keys[pygame.K_LEFT]:
             pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,110))
             #pygame.display.update()
@@ -151,8 +158,25 @@ def play():
             if run_index >= 8:
                 run_index = 0
             spriteImg = pygame.image.load(f'img/rundude{int(run_index)}.png')
-            playerX -= 1.5
+            playerX -= vel
             leftplayer(playerX, playerY)
+            
+        if not(isJump):
+            if keys[pygame.K_UP]:
+                playerY -= vel
+            if keys[pygame.K_DOWN]:
+                playerY += vel
+            if keys[pygame.K_SPACE]:
+                isJump = True
+        else:
+            if jumpCount >= -10:
+                playerY -= (jumpCount * abs(jumpCount)) * 0.5
+                jumpCount -= 1
+            else: 
+                jumpCount = 10
+                isJump = False
+
+            
             
         pygame.display.update()
 
