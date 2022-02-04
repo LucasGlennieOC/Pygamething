@@ -124,8 +124,8 @@ def play():
     playerX = 500  
     playerY = 500
     run_index = 0
-    run_speed = 0.2
-    vel = 2
+    run_speed = 0.4
+    vel = 5
     width = 1000
     height = 600
 
@@ -139,7 +139,7 @@ def play():
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,110))
+            pygame.draw.rect(screen, (0,0,0), (playerX,playerY+5,150,110))
             run_index += run_speed
             #time.sleep(0.3)
             if run_index >= 8:
@@ -151,7 +151,7 @@ def play():
             #pygame.display.update()
             
         if keys[pygame.K_LEFT]:
-            pygame.draw.rect(screen, (0,0,0), (playerX,playerY,150,110))
+            pygame.draw.rect(screen, (0,0,0), (playerX,playerY+5,150,110))
             #pygame.display.update()
             run_index += run_speed
             #time.sleep(0.3)
@@ -163,11 +163,17 @@ def play():
             
         if not(isJump):
             if keys[pygame.K_UP]:
+                pygame.draw.rect(screen, (0,0,0), (playerX,playerY+5,150,110))
                 playerY -= vel
+                
             if keys[pygame.K_DOWN]:
+                pygame.draw.rect(screen, (0,0,0), (playerX,playerY+5,150,110))
                 playerY += vel
+                
             if keys[pygame.K_SPACE]:
+                pygame.draw.rect(screen, (0,0,0), (playerX,playerY+5,150,110))
                 isJump = True
+                
         else:
             if jumpCount >= -10:
                 playerY -= (jumpCount * abs(jumpCount)) * 0.25
