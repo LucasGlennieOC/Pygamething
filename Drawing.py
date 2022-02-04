@@ -125,7 +125,7 @@ def play():
     playerY = 500
     run_index = 0
     run_speed = 0.2
-    vel = 2
+    vel = 1
     width = 1000
     height = 600
 
