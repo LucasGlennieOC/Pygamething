@@ -125,12 +125,12 @@ def play():
     playerY = 500
     run_index = 0
     run_speed = 0.2
-    vel = 1
+    vel = 2
     width = 1000
     height = 600
 
     isJump = False
-    jumpCount = 10
+    jumpCount = 9
     #clear = (0, 0, 0, 0)
     while running:
         for event in pygame.event.get():
@@ -170,7 +170,7 @@ def play():
                 isJump = True
         else:
             if jumpCount >= -10:
-                playerY -= (jumpCount * abs(jumpCount)) * 0.5
+                playerY -= (jumpCount * abs(jumpCount)) * 0.25
                 jumpCount -= 1
             else: 
                 jumpCount = 10
